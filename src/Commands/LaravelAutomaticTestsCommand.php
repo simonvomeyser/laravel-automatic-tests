@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace SimonVomEyser\LaravelAutomaticTests\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelAutomaticTestsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-automatic-tests';
 
     public $description = 'My command';
 
