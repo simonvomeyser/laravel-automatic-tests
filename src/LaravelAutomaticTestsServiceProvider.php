@@ -18,8 +18,6 @@ class LaravelAutomaticTestsServiceProvider extends PackageServiceProvider
         $package
             ->name('laravel-automatic-tests')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel-automatic-tests_table')
-            ->hasCommand(LaravelAutomaticTestsCommand::class);
+            ->hasViews();
     }
 }
