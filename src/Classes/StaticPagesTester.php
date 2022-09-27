@@ -2,9 +2,10 @@
 
 namespace SimonVomEyser\LaravelAutomaticTests\Classes;
 
-use Illuminate\Foundation\Testing\TestCase;
+
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 class StaticPagesTester
