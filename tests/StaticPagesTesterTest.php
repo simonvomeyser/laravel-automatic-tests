@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Framework\ExpectationFailedException;
 use SimonVomEyser\LaravelAutomaticTests\Classes\StaticPagesTester;
 use Illuminate\Support\Facades\Route;
 use function PHPUnit\Framework\assertCount;
@@ -14,6 +15,7 @@ beforeEach(function () {
     Route::view('/page-4', 'automatic-tests::tests.page-4')->name('page-4');
     Route::view('/page-hidden', 'automatic-tests::tests.page-hidden')->name('page-hidden');
     Route::view('/page-also-hidden', 'automatic-tests::tests.page-also-hidden')->name('page-also-hidden');
+    Route::view('/page-broken', 'automatic-tests::tests.page-broken')->name('page-broken');
 
     $this->expectedUris = [
         "http://localhost",
@@ -80,6 +82,28 @@ it('can parse starting from another base url', function () {
 it('finds hidden links when starting from hidden page', function () {
     $staticPagesTester = StaticPagesTester::create()
         ->startFromUrl('page-hidden')
+        ->run();
+
+    assertCount(2, $staticPagesTester->urisHandled);
+});
+
+it('it throws errors on pages that are not reachable', function () {
+    $caughtExceptionClass = null;
+    try {
+        StaticPagesTester::create()
+            ->startFromUrl('page-broken')
+            ->run();
+    } catch (\Exception $e) {
+        $caughtExceptionClass = get_class($e);
+    }
+
+    assertSame(ExpectationFailedException::class, $caughtExceptionClass);
+});
+
+it('can skip the default assertions', function () {
+    $staticPagesTester = StaticPagesTester::create()
+        ->startFromUrl('page-broken')
+        ->skipDefaultAssertion()
         ->run();
 
     assertCount(2, $staticPagesTester->urisHandled);

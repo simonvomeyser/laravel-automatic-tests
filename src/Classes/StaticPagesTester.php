@@ -14,8 +14,9 @@ class StaticPagesTester
     public TestCase|OrchestraTestCase $testCase;
     public array $urisHandled = [];
     public string $baseUrl;
-    public bool $ignoreQueryParameters = false;
-    public bool $ignorePageAnchors = false;
+    protected bool $ignoreQueryParameters = false;
+    protected bool $ignorePageAnchors = false;
+    protected bool $skipDefaultAssertion = false;
 
     public function __construct(TestCase|OrchestraTestCase $testCase)
     {
@@ -38,16 +39,16 @@ class StaticPagesTester
         $crawler = new Crawler($response->getContent());
 
         return $crawler->filter('a')
-            ->each(function($node) {
+            ->each(function ($node) {
                 $href = $node->attr('href');
                 $query = parse_url($href, PHP_URL_QUERY);
                 $fragment = parse_url($href, PHP_URL_FRAGMENT);
 
-                if($query && $this->ignoreQueryParameters) {
+                if ($query && $this->ignoreQueryParameters) {
                     $href = str_replace('?' . $query, '', $href);
                 }
-                if($fragment && $this->ignorePageAnchors) {
-                    $href = str_replace('#' . $fragment , '', $href);
+                if ($fragment && $this->ignorePageAnchors) {
+                    $href = str_replace('#' . $fragment, '', $href);
                 }
                 return $href;
             });
@@ -62,7 +63,9 @@ class StaticPagesTester
         // Actually get the response
         $response = $this->testCase->get($uri);
 
-        $this->applyAssertions($response, $uri, $foundOnUri);
+        if(!$this->skipDefaultAssertion) {
+            $this->applyAssertions($response, $uri, $foundOnUri);
+        }
 
         $this->urisHandled[] = $uri;
 
@@ -82,21 +85,30 @@ class StaticPagesTester
         return $this;
     }
 
-    public function ignoreQueryParameters($value = true): self
+    public function ignoreQueryParameters(): self
     {
-        $this->ignoreQueryParameters = $value;
+        $this->ignoreQueryParameters = true;
 
         return $this;
     }
-    public function ignorePageAnchors($value = true): self
+
+    public function ignorePageAnchors(): self
     {
-        $this->ignorePageAnchors = $value;
+        $this->ignorePageAnchors = true;
 
         return $this;
     }
+
     public function startFromUrl($baseUrl): self
     {
         $this->baseUrl = url($baseUrl);
+
+        return $this;
+    }
+
+    public function skipDefaultAssertion(): self
+    {
+        $this->skipDefaultAssertion = true;
 
         return $this;
     }
@@ -113,7 +125,7 @@ class StaticPagesTester
     protected function applyAssertions(TestResponse $response, $uri, $foundOnUri = ""): void
     {
         $foundOnUri = $foundOnUri ?: $this->baseUrl;
-        $message = "The url $uri is not returning a 4xx or 5xx status code, but a " . $response->status() ." (found on $foundOnUri)";
+        $message = "The url $uri is not returning a 4xx or 5xx status code, but a " . $response->status() . " (found on $foundOnUri)";
         $this->testCase->assertTrue($response->status() <= 399, $message);
     }
 
