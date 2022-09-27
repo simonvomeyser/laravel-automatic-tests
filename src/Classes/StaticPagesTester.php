@@ -2,66 +2,45 @@
 
 namespace SimonVomEyser\LaravelAutomaticTests\Classes;
 
-use GuzzleHttp\Psr7\Uri;
 use Illuminate\Foundation\Testing\TestCase;
+use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
-use Spatie\Crawler\Crawler;
-use Spatie\Crawler\CrawlProfiles\CrawlInternalUrls;
-use Spatie\Crawler\CrawlQueues\ArrayCrawlQueue;
+use Symfony\Component\DomCrawler\Crawler;
 
 class StaticPagesTester
 {
-    public $crawler;
-    public $testCase;
-    public $urisToTest = [];
-    public $urisHandled = [];
-    public $baseUrl;
-    public $maxCrawlDepth = 4;
-    public $currentCrawlDepth = 1;
+    public TestCase $testCase;
+    public array $urisHandled = [];
+    public string $baseUrl;
+    public bool $ignoreQueryParameters = false;
 
     public function __construct(TestCase $testCase)
     {
         $this->testCase = $testCase;
-        $this->crawler = Crawler::create();
         $this->baseUrl = url('/');
-
     }
 
     public static function create(TestCase $testCase = null): self
     {
         // Helper to get the calling test case
         $trace = debug_backtrace();
-        $testCase = $testCase ?? $trace[1]['object'];
+        $guessTestCase = $trace[1]['object'] ?? null;
+        $testCase = $testCase ?? $guessTestCase;
 
         return new self($testCase);
     }
 
-    protected function addToUriQueue(string $url): void
-    {
-        $isExternal = !str_starts_with($url, '/') && (new Uri($url))->getHost() !== (new Uri($this->baseUrl))->getHost();
-        $relativeUrl = str_replace($this->baseUrl, '', $url);// The url without the base url
-
-        if ($isExternal) {
-            return;
-        }
-
-        if (in_array($relativeUrl, $this->urisToTest)) {
-            return;
-        }
-
-        if (!$relativeUrl) {
-            return;
-        }
-
-        $this->urisToTest[] = $relativeUrl;
-    }
-
     public function findUrisInResponse(TestResponse $response): array
     {
-        $crawler = new \Symfony\Component\DomCrawler\Crawler($response->getContent());
+        $crawler = new Crawler($response->getContent());
 
         return $crawler->filter('a')
-            ->each(fn($node) => $node->attr('href'));
+            ->each(function($node) {
+                if($this->ignoreQueryParameters) {
+                    return Str::before($node->attr('href'), '?');
+                }
+                return $node->attr('href');
+            });
     }
 
     public function crawlUriRecursively($uri, $depth = 1, $foundOnUri = ''): void
@@ -85,32 +64,14 @@ class StaticPagesTester
 
     }
 
-
     public function run(): void
     {
         $this->crawlUriRecursively('/');
-
-        return;
-        $queue = new ArrayCrawlQueue();
-        $observer = new ResponseTestCrawlObserver();
-        $profile = new CrawlInternalUrls(url('/'));
-
-        dump($this->crawler);
-        do {
-            $this->crawler
-                ->setCrawlQueue($queue)
-                ->setCurrentCrawlLimit(1)
-                ->setCrawlProfile($profile)
-                ->setCrawlObserver($observer)
-                ->startCrawling(url('/'));
-
-        } while ($queue->hasPendingUrls());
-
     }
 
-    public function configureCrawler(callable $cb): self
+    public function ignoreQueryParameters($value = true): self
     {
-        $cb($this->crawler);
+        $this->ignoreQueryParameters = $value;
 
         return $this;
     }
