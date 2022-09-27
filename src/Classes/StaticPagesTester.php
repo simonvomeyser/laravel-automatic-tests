@@ -5,23 +5,24 @@ namespace SimonVomEyser\LaravelAutomaticTests\Classes;
 
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Foundation\Testing\TestCase;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 class StaticPagesTester
 {
-    public TestCase $testCase;
+    public TestCase|OrchestraTestCase $testCase;
     public array $urisHandled = [];
     public string $baseUrl;
     public bool $ignoreQueryParameters = false;
 
-    public function __construct(TestCase $testCase)
+    public function __construct(TestCase|OrchestraTestCase $testCase)
     {
         $this->testCase = $testCase;
         $this->baseUrl = url('/');
     }
 
-    public static function create(TestCase $testCase = null): self
+    public static function create(TestCase|OrchestraTestCase $testCase = null): self
     {
         // Helper to get the calling test case
         $trace = debug_backtrace();
@@ -65,9 +66,11 @@ class StaticPagesTester
 
     }
 
-    public function run(): void
+    public function run(): self
     {
-        $this->crawlUriRecursively('/');
+        $this->crawlUriRecursively($this->baseUrl);
+
+        return $this;
     }
 
     public function ignoreQueryParameters($value = true): self
