@@ -8,6 +8,6 @@ class StaticPagesTester extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return \SimonVomEyser\LaravelAutomaticTests\Classes\StaticPagesTester::class;
+        return Classes\StaticPagesTester::class;
     }
 }
