@@ -17,6 +17,7 @@ class StaticPagesTester
     protected bool $ignoreQueryParameters = false;
     protected bool $ignorePageAnchors = false;
     protected bool $skipDefaultAssertion = false;
+    protected array $customAssertions = [];
 
     public function __construct(TestCase|OrchestraTestCase $testCase)
     {
@@ -63,8 +64,14 @@ class StaticPagesTester
         // Actually get the response
         $response = $this->testCase->get($uri);
 
+        // the default assertion is added
         if(!$this->skipDefaultAssertion) {
             $this->applyAssertions($response, $uri, $foundOnUri);
+        }
+
+        // if the user added custom assertions, we apply them
+        foreach($this->customAssertions as $customAssertion) {
+            $customAssertion($response, $uri, $foundOnUri);
         }
 
         $this->urisHandled[] = $uri;
@@ -109,6 +116,13 @@ class StaticPagesTester
     public function skipDefaultAssertion(): self
     {
         $this->skipDefaultAssertion = true;
+
+        return $this;
+    }
+
+    public function addAssertion(Callable $cb): self
+    {
+        $this->customAssertions[] = $cb;
 
         return $this;
     }

@@ -5,6 +5,7 @@ use SimonVomEyser\LaravelAutomaticTests\Classes\StaticPagesTester;
 use Illuminate\Support\Facades\Route;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
+use function PHPUnit\Framework\assertTrue;
 
 
 beforeEach(function () {
@@ -107,4 +108,19 @@ it('can skip the default assertions', function () {
         ->run();
 
     assertCount(2, $staticPagesTester->urisHandled);
+});
+
+it('can add custom assertion', function () {
+    $customAssertionCalled = 0;
+    $staticPagesTester = StaticPagesTester::create()
+        ->startFromUrl('page-broken')
+        ->skipDefaultAssertion()
+        ->addAssertion(function($response)  use (&$customAssertionCalled) {
+            $customAssertionCalled++;
+            assertTrue($response->status() < 499);
+        })
+        ->run();
+
+    assertCount(2, $staticPagesTester->urisHandled);
+    assertSame(2, $customAssertionCalled);
 });
