@@ -61,6 +61,7 @@ class StaticPagesTester
 
         // Actually get the response
         $response = $this->testCase->get($uri);
+
         $this->applyAssertions($response, $uri, $foundOnUri);
 
         $this->urisHandled[] = $uri;
@@ -93,14 +94,21 @@ class StaticPagesTester
 
         return $this;
     }
+    public function startFromUrl($baseUrl): self
+    {
+        $this->baseUrl = url($baseUrl);
+
+        return $this;
+    }
 
     protected function shouldCrawl($uri): bool
     {
-        $isExternal = !str_starts_with($uri, '/') && !str_contains($uri, $this->baseUrl);
+        $isExternal = !str_starts_with($uri, '/') && !str_contains($uri, url('/'));
         $isHandled = in_array($uri, $this->urisHandled);
 
         return !$isExternal && !$isHandled;
     }
+
 
     protected function applyAssertions(TestResponse $response, $uri, $foundOnUri = ""): void
     {

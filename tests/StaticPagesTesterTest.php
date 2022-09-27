@@ -13,12 +13,13 @@ beforeEach(function () {
     Route::view('/page-3', 'automatic-tests::tests.page-3')->name('page-3');
     Route::view('/page-4', 'automatic-tests::tests.page-4')->name('page-4');
     Route::view('/page-hidden', 'automatic-tests::tests.page-hidden')->name('page-hidden');
+    Route::view('/page-also-hidden', 'automatic-tests::tests.page-also-hidden')->name('page-also-hidden');
 
     $this->expectedUris = [
         "http://localhost",
         "http://localhost/page-1",
         "http://localhost/page-2",
-        "http://localhost/page-3",
+        "/page-3",
         "http://localhost/page-4",
         "http://localhost/page-2?search=lorem",
         "http://localhost/page-2#section-link",
@@ -66,4 +67,20 @@ it('can ignore both page anchors and query params', function () {
         ->run();
 
     assertCount(5, $staticPagesTester->urisHandled);
+});
+
+it('can parse starting from another base url', function () {
+    $staticPagesTester = StaticPagesTester::create()
+        ->startFromUrl('/page-2')
+        ->run();
+
+    assert(sort($this->expectedUris), sort($staticPagesTester->urisHandled));
+});
+
+it('finds hidden links when starting from hidden page', function () {
+    $staticPagesTester = StaticPagesTester::create()
+        ->startFromUrl('page-hidden')
+        ->run();
+
+    assertCount(2, $staticPagesTester->urisHandled);
 });
