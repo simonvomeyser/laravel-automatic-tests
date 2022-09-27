@@ -5,8 +5,28 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/simonvomeyser/laravel-automatic-tests/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/simonvomeyser/laravel-automatic-tests/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/simonvomeyser/laravel-automatic-tests.svg?style=flat-square)](https://packagist.org/packages/simonvomeyser/laravel-automatic-tests)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+A package for automatically testing all internal links of your application in your Feature-Tests.
 
+In the most simple form, you just need one command to test that all of your linked, internal don't respond with an error.
+
+- Written for peace of mind... and simplicity in mind
+- Still quite configurable
+- Works with PHPUnit and PEST PHP
+
+
+```php
+    //...
+    public function testAllInternalPagesReachableOnFrontpage()
+    {
+        // Crawls all pages reachable from the root (url('/')) of your application
+        // Makes sure, the all return a response code > 399
+        StaticPagesTester::create()->run();
+    }
+    //...
+```
+
+
+## Installation
 
 ```bash
 composer require simonvomeyser/laravel-automatic-tests
@@ -14,10 +34,9 @@ composer require simonvomeyser/laravel-automatic-tests
 
 ## Usage
 
-```php
-$laravelAutomaticTests = new SimonVomEyser\LaravelAutomaticTests();
-echo $laravelAutomaticTests->echoPhrase('Hello, SimonVomEyser!');
-```
+- [ ] Usage plain
+- [ ] working with alternatives
+- [ ] base url?
 
 ## Testing
 
