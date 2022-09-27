@@ -35,8 +35,9 @@ composer require simonvomeyser/laravel-automatic-tests
 ## Usage
 
 - [ ] Usage plain
-- [ ] working with alternatives
-- [ ] base url?
+- [ ] creation examples
+- [ ] ignore Queries or 
+- [ ] change base url?
 
 ## Testing
 

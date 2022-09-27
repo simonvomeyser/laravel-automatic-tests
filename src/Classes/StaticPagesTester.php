@@ -15,6 +15,7 @@ class StaticPagesTester
     public array $urisHandled = [];
     public string $baseUrl;
     public bool $ignoreQueryParameters = false;
+    public bool $ignorePageAnchors = false;
 
     public function __construct(TestCase|OrchestraTestCase $testCase)
     {
@@ -38,10 +39,17 @@ class StaticPagesTester
 
         return $crawler->filter('a')
             ->each(function($node) {
-                if($this->ignoreQueryParameters) {
-                    return Str::before($node->attr('href'), '?');
+                $href = $node->attr('href');
+                $query = parse_url($href, PHP_URL_QUERY);
+                $fragment = parse_url($href, PHP_URL_FRAGMENT);
+
+                if($query && $this->ignoreQueryParameters) {
+                    $href = str_replace('?' . $query, '', $href);
                 }
-                return $node->attr('href');
+                if($fragment && $this->ignorePageAnchors) {
+                    $href = str_replace('#' . $fragment , '', $href);
+                }
+                return $href;
             });
     }
 
@@ -76,6 +84,12 @@ class StaticPagesTester
     public function ignoreQueryParameters($value = true): self
     {
         $this->ignoreQueryParameters = $value;
+
+        return $this;
+    }
+    public function ignorePageAnchors($value = true): self
+    {
+        $this->ignorePageAnchors = $value;
 
         return $this;
     }
