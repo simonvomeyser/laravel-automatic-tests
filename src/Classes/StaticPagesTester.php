@@ -139,7 +139,9 @@ class StaticPagesTester
     protected function applyAssertions(TestResponse $response, $uri, $foundOnUri = ""): void
     {
         $foundOnUri = $foundOnUri ?: $this->baseUrl;
-        $message = "The url $uri is not returning a 4xx or 5xx status code, but a " . $response->status() . " (found on $foundOnUri)";
+        $message = "The url $uri is not returning a success or redirect status code, but the status code " . $response->status();
+        $message .= $foundOnUri ? " (found on $foundOnUri)" : "";
+
         $this->testCase->assertTrue($response->status() <= 399, $message);
     }
 
