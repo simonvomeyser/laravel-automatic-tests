@@ -1,8 +1,8 @@
 <?php
 
-use PHPUnit\Framework\ExpectationFailedException;
-use SimonVomEyser\LaravelAutomaticTests\Classes\StaticPagesTester;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\Framework\ExpectationFailedException;
+use SimonVomEyser\LaravelAutomaticTests\StaticPagesTester;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;

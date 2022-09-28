@@ -4,7 +4,6 @@ namespace SimonVomEyser\LaravelAutomaticTests;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use SimonVomEyser\LaravelAutomaticTests\Commands\LaravelAutomaticTestsCommand;
 
 class LaravelAutomaticTestsServiceProvider extends PackageServiceProvider
 {
@@ -16,8 +15,6 @@ class LaravelAutomaticTestsServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-automatic-tests')
-            ->hasConfigFile()
-            ->hasViews();
+            ->name('laravel-automatic-tests');
     }
 }
