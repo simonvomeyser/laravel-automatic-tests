@@ -43,7 +43,7 @@ it('tests all pages reachable from the frontpage', function () {
 });
 ```
 
-with the [PHPUnit](https://phpunit.de/)
+with [PHPUnit](https://phpunit.de/)
 ```php
 <?php
 // tests/feature/StaticPagesTest.php
