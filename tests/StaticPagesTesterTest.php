@@ -1,12 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use PHPUnit\Framework\ExpectationFailedException;
-use SimonVomEyser\LaravelAutomaticTests\StaticPagesTester;
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertSame;
 use function PHPUnit\Framework\assertTrue;
-
+use PHPUnit\Framework\ExpectationFailedException;
+use SimonVomEyser\LaravelAutomaticTests\StaticPagesTester;
 
 beforeEach(function () {
     Route::view('/', 'automatic-tests::tests.index')->name('index');
@@ -19,14 +18,14 @@ beforeEach(function () {
     Route::view('/page-broken', 'automatic-tests::tests.page-broken')->name('page-broken');
 
     $this->expectedUris = [
-        "http://localhost",
-        "http://localhost/page-1",
-        "http://localhost/page-2",
-        "/page-3",
-        "http://localhost/page-4",
-        "http://localhost/page-2?search=lorem",
-        "http://localhost/page-2#section-link",
-        "http://localhost/page-2?search=lorem#section-link",
+        'http://localhost',
+        'http://localhost/page-1',
+        'http://localhost/page-2',
+        '/page-3',
+        'http://localhost/page-4',
+        'http://localhost/page-2?search=lorem',
+        'http://localhost/page-2#section-link',
+        'http://localhost/page-2?search=lorem#section-link',
     ];
 });
 
@@ -115,7 +114,7 @@ it('can add custom assertion', function () {
     $staticPagesTester = StaticPagesTester::create()
         ->startFromUrl('page-broken')
         ->skipDefaultAssertion()
-        ->addAssertion(function($response)  use (&$customAssertionCalled) {
+        ->addAssertion(function ($response) use (&$customAssertionCalled) {
             $customAssertionCalled++;
             assertTrue($response->status() < 499);
         })

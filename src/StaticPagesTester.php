@@ -2,7 +2,6 @@
 
 namespace SimonVomEyser\LaravelAutomaticTests;
 
-
 use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Testing\TestResponse;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -11,14 +10,23 @@ use Symfony\Component\DomCrawler\Crawler;
 class StaticPagesTester
 {
     public TestCase|OrchestraTestCase $testCase;
+
     public array $urisHandled = [];
+
     public array $responses = [];
+
     protected string $baseUrl;
+
     protected int $maximumCrawlDepth = 0;
+
     protected int $maximumPages = 0;
+
     protected bool $ignoreQueryParameters = false;
+
     protected bool $ignorePageAnchors = false;
+
     protected bool $skipDefaultAssertion = false;
+
     protected array $customAssertions = [];
 
     public function __construct(TestCase|OrchestraTestCase $testCase)
@@ -48,26 +56,27 @@ class StaticPagesTester
                 $fragment = parse_url($href, PHP_URL_FRAGMENT);
 
                 if ($query && $this->ignoreQueryParameters) {
-                    $href = str_replace('?' . $query, '', $href);
+                    $href = str_replace('?'.$query, '', $href);
                 }
                 if ($fragment && $this->ignorePageAnchors) {
-                    $href = str_replace('#' . $fragment, '', $href);
+                    $href = str_replace('#'.$fragment, '', $href);
                 }
+
                 return $href;
             });
     }
 
     public function crawlUriRecursively($uri, $depth = 0, $foundOnUri = ''): void
     {
-        if (!$this->shouldCrawl($uri)) {
+        if (! $this->shouldCrawl($uri)) {
             return;
         }
 
-        if($this->maximumCrawlDepth > 0 && $depth > $this->maximumCrawlDepth) {
+        if ($this->maximumCrawlDepth > 0 && $depth > $this->maximumCrawlDepth) {
             return;
         }
 
-        if($this->maximumPages > 0 && count($this->urisHandled) >= $this->maximumPages) {
+        if ($this->maximumPages > 0 && count($this->urisHandled) >= $this->maximumPages) {
             return;
         }
 
@@ -75,12 +84,12 @@ class StaticPagesTester
         $response = $this->testCase->get($uri);
 
         // the default assertion is added
-        if(!$this->skipDefaultAssertion) {
+        if (! $this->skipDefaultAssertion) {
             $this->applyAssertions($response, $uri, $foundOnUri);
         }
 
         // if the user added custom assertions, we apply them
-        foreach($this->customAssertions as $customAssertion) {
+        foreach ($this->customAssertions as $customAssertion) {
             $customAssertion($response, $uri, $foundOnUri);
         }
 
@@ -88,12 +97,11 @@ class StaticPagesTester
         $this->responses[$uri] = $response;
 
         $urisFoundOnPage = $this->findUrisInResponse($response);
-        $urisToParse = array_filter($urisFoundOnPage, fn($link) => $this->shouldCrawl($link));
+        $urisToParse = array_filter($urisFoundOnPage, fn ($link) => $this->shouldCrawl($link));
 
         foreach ($urisToParse as $uriToParse) {
             $this->crawlUriRecursively($uriToParse, $depth + 1, $uri);
         }
-
     }
 
     public function run(): self
@@ -131,7 +139,7 @@ class StaticPagesTester
         return $this;
     }
 
-    public function addAssertion(Callable $cb): self
+    public function addAssertion(callable $cb): self
     {
         $this->customAssertions[] = $cb;
 
@@ -154,20 +162,18 @@ class StaticPagesTester
 
     protected function shouldCrawl($uri): bool
     {
-        $isExternal = !str_starts_with($uri, '/') && !str_contains($uri, url('/'));
+        $isExternal = ! str_starts_with($uri, '/') && ! str_contains($uri, url('/'));
         $isHandled = in_array($uri, $this->urisHandled);
 
-        return !$isExternal && !$isHandled;
+        return ! $isExternal && ! $isHandled;
     }
 
-
-    protected function applyAssertions(TestResponse $response, $uri, $foundOnUri = ""): void
+    protected function applyAssertions(TestResponse $response, $uri, $foundOnUri = ''): void
     {
         $foundOnUri = $foundOnUri ?: $this->baseUrl;
-        $message = "The url $uri is not returning a success or redirect status code, but the status code " . $response->status();
-        $message .= $foundOnUri ? " (found on $foundOnUri)" : "";
+        $message = "The url $uri is not returning a success or redirect status code, but the status code ".$response->status();
+        $message .= $foundOnUri ? " (found on $foundOnUri)" : '';
 
         $this->testCase->assertTrue($response->status() <= 399, $message);
     }
-
 }
