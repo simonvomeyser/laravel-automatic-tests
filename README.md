@@ -162,10 +162,9 @@ Since this package needs the current testcase to start it's crawling, you actual
 $staticPagesTester = new StaticPagesTester($this);
 ```
 
-Since this is no pretty API, the Package tries some magic with the `create()` method to find the calling testcase.
+Since this is no pretty API, the package tries some magic with the `create()` method to find the calling testcase.
 
 Keep that in mind if you want to use the `StaticPagesTester` elsewhere, not from a test.
-
 
 
 ## Roadmap, ideas, features not implemented yet
