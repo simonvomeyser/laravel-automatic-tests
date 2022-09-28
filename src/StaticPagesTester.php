@@ -7,13 +7,12 @@ use Illuminate\Foundation\Testing\TestCase;
 use Illuminate\Testing\TestResponse;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use function SimonVomEyser\LaravelAutomaticTests\Classes\str_contains;
-use function SimonVomEyser\LaravelAutomaticTests\Classes\str_starts_with;
 
 class StaticPagesTester
 {
     public TestCase|OrchestraTestCase $testCase;
     public array $urisHandled = [];
+    public array $responses = [];
     protected string $baseUrl;
     protected int $maximumCrawlDepth = 0;
     protected int $maximumPages = 0;
@@ -86,6 +85,7 @@ class StaticPagesTester
         }
 
         $this->urisHandled[] = $uri;
+        $this->responses[$uri] = $response;
 
         $urisFoundOnPage = $this->findUrisInResponse($response);
         $urisToParse = array_filter($urisFoundOnPage, fn($link) => $this->shouldCrawl($link));

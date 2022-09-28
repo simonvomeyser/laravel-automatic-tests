@@ -140,3 +140,14 @@ it('can define a maximum of pages to crawl', function () {
 
     assertCount(3, $staticPagesTester->urisHandled);
 });
+
+it('makes it possible to access the test responses too', function () {
+    $staticPagesTester = StaticPagesTester::create()
+        ->maxPages(3)
+        ->skipDefaultAssertion()
+        ->run();
+
+    $firstUri = $staticPagesTester->urisHandled[0];
+
+    assertTrue($staticPagesTester->responses[$firstUri]->isOk());
+});
