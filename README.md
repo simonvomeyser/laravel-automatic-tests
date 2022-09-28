@@ -7,7 +7,7 @@
 
 A package to quickly and automatically test all static, internal links in your Laravel app. Working with PHPUnit oder PEST. 🎉
 
-There are a many [options](#configuration), but the most simple test is:
+There are a many [options](https://github.com/simonvomeyser/laravel-automatic-tests#configuration), but the most simple test is:
 
 ```php
     //...
@@ -119,16 +119,16 @@ To disable this behavior, you can skip the assertion and handle all uris and res
 
 ### Adding custom assertions
 
-While doing all custom assertions after getting them is possible, you may also add your custom assertions via `addAssertion` right away.
+While doing all custom assertions after finding all URIs is possible, you may skip the fuzz and add your custom assertions via `addAssertion` right away.
 
 ```php
     // ...
     StaticPagesTester::create()
-            ->skipDefaultAssertion()
             ->addAssertion(function($response) {
                 // Example: allow anything except for 5xx errors for all uris
                 assertTrue($response->status() < 500);
             })
+            ->skipDefaultAssertion()
             ->addAssertion(function($response, $uri) {
                 // Example: check for redirects only when accessing admin area
                 if(str_contains($uri, '/admin')) {
@@ -155,10 +155,10 @@ Since automatic crawling can munch a lot of memory, you may define a maximum of 
 
 ### A note on passing the testcase
 
-Since this package needs the current testcase to start it's crawling, you actually would need to pass the Test itself to new up the `StaticPagesTester` like so: 
+This package needs the current testcase to start it's crawling - you actually would need to pass the Test itself to new up the `StaticPagesTester` like so: 
 
 ```php
-// This is NOT necessary, but happening under the hood
+// This is NOT necessary, but it's happening under the hood
 $staticPagesTester = new StaticPagesTester($this);
 ```
 
@@ -166,14 +166,13 @@ Since this is no pretty API, the package tries some magic with the `create()` me
 
 Keep that in mind if you want to use the `StaticPagesTester` elsewhere, not from a test.
 
-
 ## Roadmap, ideas, features not implemented yet
 
 I have a lot of ideas for that package, but we all have little time, and I wrote this mostly for myself with only basic features. If somebody is interested let me know, we could discuss a few ideas like
 
-- Making this work efficiently in `Laravel Dusk` to render JavaScript 
-- Making this work with `DataProviders` to have a much better output (one test per found uri)
-- Add a way to also check for more things like broken external links, thus making this package deserving the title "LaravelAutomaticTests" 😀
+- [ ] Making this work efficiently in `Laravel Dusk` to render JavaScript 
+- [ ] Making this work with `DataProviders` to have a much better output (one test per found uri)
+- [ ] Add a way to also check for more things like broken external links, thus making this package deserving the title "LaravelAutomaticTests" 😀
 
 ## Changelog
 
