@@ -1,6 +1,6 @@
 name: Fix PHP code style issues
 
-on: [pull_request]
+on: [push]
 
 jobs:
   php-code-styling:
