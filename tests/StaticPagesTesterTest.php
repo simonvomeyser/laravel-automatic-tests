@@ -124,3 +124,19 @@ it('can add custom assertion', function () {
     assertCount(2, $staticPagesTester->urisHandled);
     assertSame(2, $customAssertionCalled);
 });
+
+it('can define a maximum crawl depth', function () {
+    $staticPagesTester = StaticPagesTester::create()
+        ->maxCrawlDepth(1)
+        ->run();
+
+    assertCount(6, $staticPagesTester->urisHandled);
+});
+
+it('can define a maximum of pages to crawl', function () {
+    $staticPagesTester = StaticPagesTester::create()
+        ->maxPages(3)
+        ->run();
+
+    assertCount(3, $staticPagesTester->urisHandled);
+});

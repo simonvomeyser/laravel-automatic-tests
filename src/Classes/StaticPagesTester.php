@@ -13,7 +13,9 @@ class StaticPagesTester
 {
     public TestCase|OrchestraTestCase $testCase;
     public array $urisHandled = [];
-    public string $baseUrl;
+    protected string $baseUrl;
+    protected int $maximumCrawlDepth = 0;
+    protected int $maximumPages = 0;
     protected bool $ignoreQueryParameters = false;
     protected bool $ignorePageAnchors = false;
     protected bool $skipDefaultAssertion = false;
@@ -55,9 +57,17 @@ class StaticPagesTester
             });
     }
 
-    public function crawlUriRecursively($uri, $depth = 1, $foundOnUri = ''): void
+    public function crawlUriRecursively($uri, $depth = 0, $foundOnUri = ''): void
     {
         if (!$this->shouldCrawl($uri)) {
+            return;
+        }
+
+        if($this->maximumCrawlDepth > 0 && $depth > $this->maximumCrawlDepth) {
+            return;
+        }
+
+        if($this->maximumPages > 0 && count($this->urisHandled) >= $this->maximumPages) {
             return;
         }
 
@@ -123,6 +133,20 @@ class StaticPagesTester
     public function addAssertion(Callable $cb): self
     {
         $this->customAssertions[] = $cb;
+
+        return $this;
+    }
+
+    public function maxPages(int $number): self
+    {
+        $this->maximumPages = $number;
+
+        return $this;
+    }
+
+    public function maxCrawlDepth(int $number): self
+    {
+        $this->maximumCrawlDepth = $number;
 
         return $this;
     }
