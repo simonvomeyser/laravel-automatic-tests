@@ -15,6 +15,7 @@ class LaravelAutomaticTestsServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('laravel-automatic-tests');
+            ->name('laravel-automatic-tests')
+            ->hasViews();
     }
 }
