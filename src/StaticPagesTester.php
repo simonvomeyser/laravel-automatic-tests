@@ -65,7 +65,7 @@ class StaticPagesTester
                 return $href;
             });
 
-        return array_filter($uris, fn($uri) => !$this->is_file_uri($uri));
+        return array_filter($uris, fn ($uri) => ! $this->is_file_uri($uri));
     }
 
     public function crawlUriRecursively($uri, $depth = 0, $foundOnUri = ''): void
@@ -181,6 +181,6 @@ class StaticPagesTester
 
     private function is_file_uri(string $uri)
     {
-        return !!pathinfo($uri, PATHINFO_EXTENSION);
+        return (bool) pathinfo($uri, PATHINFO_EXTENSION);
     }
 }
