@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/simonvomeyser/laravel-automatic-tests/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/simonvomeyser/laravel-automatic-tests/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/simonvomeyser/laravel-automatic-tests.svg?style=flat-square)](https://packagist.org/packages/simonvomeyser/laravel-automatic-tests)
 
-A package to quickly and automatically test all static, internal links in your Laravel app. Working with PHPUnit oder PEST. 🎉
+A package to quickly and automatically test all static, internal links in your Laravel app. Working with PHPUnit or PEST. 🎉
 
 There are a many [options](https://github.com/simonvomeyser/laravel-automatic-tests#configuration), but the most simple test is:
 
