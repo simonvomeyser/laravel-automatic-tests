@@ -12,8 +12,7 @@ There are a many [options](https://github.com/simonvomeyser/laravel-automatic-te
 ```php
     //...
     public function testAllStaticPages()
-    {
-        // Crawls all pages reachable from the root of your application
+    { // Crawls all pages reachable from the root of your application
         // Makes sure, the all links return a response code < 400
         StaticPagesTester::create()->run();
     }
@@ -171,6 +170,7 @@ Keep that in mind if you want to use the `StaticPagesTester` elsewhere, not from
 I have a lot of ideas for that package, but we all have little time, and I wrote this mostly for myself with only basic features. If somebody is interested let me know, we could discuss a few ideas like
 
 - [ ] Making this work efficiently in `Laravel Dusk` to render JavaScript 
+- [ ] Making this work with files: If you linked to `/downloads/something.pdf` we can't check the existence of the linked file atm
 - [ ] Making this work with `DataProviders` to have a much better output (one test per found uri)
 - [ ] Add a way to also check for more things like broken external links, thus making this package deserving the title "LaravelAutomaticTests" 😀
 

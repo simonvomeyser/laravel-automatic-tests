@@ -49,7 +49,7 @@ class StaticPagesTester
     {
         $crawler = new Crawler($response->getContent());
 
-        return $crawler->filter('a')
+        $uris = $crawler->filter('a')
             ->each(function ($node) {
                 $href = $node->attr('href');
                 $query = parse_url($href, PHP_URL_QUERY);
@@ -64,6 +64,8 @@ class StaticPagesTester
 
                 return $href;
             });
+
+        return array_filter($uris, fn($uri) => !$this->is_file_uri($uri));
     }
 
     public function crawlUriRecursively($uri, $depth = 0, $foundOnUri = ''): void
@@ -175,5 +177,10 @@ class StaticPagesTester
         $message .= $foundOnUri ? " (found on $foundOnUri)" : '';
 
         $this->testCase->assertTrue($response->status() <= 399, $message);
+    }
+
+    private function is_file_uri(string $uri)
+    {
+        return !!pathinfo($uri, PATHINFO_EXTENSION);
     }
 }
