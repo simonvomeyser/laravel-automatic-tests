@@ -165,7 +165,7 @@ Since this is no pretty API, the package tries some magic with the `create()` me
 
 Keep that in mind if you want to use the `StaticPagesTester` elsewhere, not from a test.
 
-## Roadmap, ideas, features not implemented yet
+## Roadmap
 
 I have a lot of ideas for that package, but we all have little time, and I wrote this mostly for myself with only basic features. If somebody is interested let me know, we could discuss a few ideas like
 
