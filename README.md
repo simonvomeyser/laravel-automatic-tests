@@ -12,8 +12,9 @@ There are a many [options](https://github.com/simonvomeyser/laravel-automatic-te
 ```php
     //...
     public function testAllStaticPages()
-    { // Crawls all pages reachable from the root of your application
-        // Makes sure, the all links return a response code < 400
+    { 
+        // Crawls all pages reachable from the root of your application
+        // Makes sure, that all links return a response code < 400
         StaticPagesTester::create()->run();
     }
     //...
