@@ -64,7 +64,7 @@ class StaticPagesTest extends TestCase
 
 ## Configuration
 
-There is quite some ways to configure the default behaviour, all fluid methods can also be used together.
+There are quite some ways to configure the default behaviour, all fluid methods can also be used together.
 
 ### Ignoring query params and anchor links
 
