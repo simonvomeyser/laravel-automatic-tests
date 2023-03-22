@@ -179,7 +179,7 @@ class StaticPagesTester
         $this->testCase->assertTrue($response->status() <= 399, $message);
     }
 
-    private function is_file_uri(string $uri)
+    private function is_file_uri(string $uri = null)
     {
         return (bool) pathinfo($uri, PATHINFO_EXTENSION);
     }
